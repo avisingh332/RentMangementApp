@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- links to the pages -->
+    <a href="/admin">View all Admins</a> (Access: Admin)<br><br>
+    <a href="/residents">View all Students</a> (Access: Admin, Residents)<br><br>
+    
+    <br><br>
+    <!-- Show only if user is logged in -->
+    {% if current_user.is_authenticated %}
+        <!-- Show current users email -->
+        <b>Current user</b>: {{current_user.email}}
+        <!-- Current users roles -->
+        {% if current_user.roles %}
+            User has Roles
+        {% endif %}
+        <br><br>
+        <!-- link for logging out -->
+        <a href="/logout">Logout</a>
+        <!-- Show if user is not logged in -->
+    {% else %}
+        <a href="/signup">Sign up</a> | <a href="/signin">Sign in</a>
+    {% endif %}
+
+    <br><br>
+        
+</body>
+</html>
