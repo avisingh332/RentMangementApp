@@ -1,0 +1,85 @@
+{% extends 'home.html' %}
+{% block content %}
+  <h2>User DashBoard</h2>
+  <div class="row">
+    <div class="col-md-9 ">
+      <div class="container">
+        <div class="row">
+          <div class=" col-md-4">
+            <div class="card w-100 text-center shadow1 ">
+              <div class="card-body">
+                <i class="bi bi-person-fill fs-1 text-primary"></i>
+                <h5 class="card-title">Lease Ending On</h5>
+                <div class="card-body">
+                  <p class="card-text">5 Jan 2025</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class=" col-md-4">
+            <div class="card w-100 text-center  shadow1 ">
+              <div class="card-body">
+                <i class="bi bi-person-fill fs-1 text-primary"></i>
+                <h5 class="card-title">Rental Rates</h5>
+                <div class="card-body">
+                  <p class="card-text">₹14,000/month</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 ">
+            <div class="card w-100 text-center shadow1 ">
+              <div class="card-body">
+                <i class="bi bi-person-fill fs-1 text-primary"></i>
+                <h5 class="card-title">Get Lease Aggreement</h5>
+                <div class="card-body">
+                  <button class="btn btn-primary">Document</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class=" col-md-12">
+            <div class="card w-100 p-4 shadow1 ">
+              <div class="d-flex justify-content-between">
+                <h3 class="card-heading">Recent Payments</h3>
+                <button class="btn btn-success">Generate Bill</button>
+              </div>
+              <div class="card-body">
+                <table class="table table-striped">
+                  <thead>
+                    <th>Payment Date</th>
+                    <th>Paid For</th>
+                    <th>Amount Paid</th>
+                    <th>Payment Status</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>2nd Jan 2025</td>
+                      <td>Jan-2025</td>
+                      <td>14000</td>
+                      <td>Fully Paid</td>
+                    </tr>
+                    <tr>
+                      <td>2nd Dec 2024</td>
+                      <td>Dec-2025</td>
+                      <td>14000</td>
+                      <td>Fully Paid</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 px-0">
+      <div class="rounded-3 mx-0 p-4 bg-white shadow1">
+        <h5>Property Details</h5>
+        <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Scelerisque ligula amet hac; molestie erat etiam duis nibh. Eleifend inceptos scelerisque semper et orci nisl. Euismod auctor et; neque habitasse ipsum cras accumsan fringilla. Metus eu praesent adipiscing congue et lectus. Metus velit tincidunt ipsum nisl habitasse est non venenatis. Diam tempor fermentum rutrum hac dignissim venenatis varius. Amet quam ullamcorper nibh habitant luctus ad semper.</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

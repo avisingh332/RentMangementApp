@@ -1,0 +1,65 @@
+{% extends 'home.html' %}
+{% block content %}
+  <style>
+    .gradient-button {
+      background: linear-gradient(to right, #2b3540, #629bb5);
+      border: none;
+      color: #fff;
+      padding: 10px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+  <div class="container">
+    <!--   <div class="">
+            <a href="{{url_for('maintenance')}}"><i class="fa-solid fa-arrow-left"></i></a>
+        </div>   -->
+    <div class="my-3">
+      <h3 class="my-auto">Add Maintenance Request</h3>
+    </div>
+    <div class="p-4 border border-2 mt-2 rounded-2 bg-white shadow1">
+      <form action="">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="tenantName" class="form-label">Select Category</label>
+              <select class="form-select" required id="inputGroupSelect01">
+                <option selected>Choose...</option>
+                <option value="1">Plumbing</option>
+                <option value="2">Electrical</option>
+                <option value="3">Harware</option>
+                <option value="4">Appliances</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="idNumber" class="form-label">Set Priority</label>
+              <select class="form-select" required id="inputGroupSelect01">
+                <option selected>Choose...</option>
+                <option value="1">Low</option>
+                <option value="2">Medium</option>
+                <option value="3">High</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="address" class="form-label">Description</label>
+              <textarea class="form-control" id="address" placeholder="Describe the Issue" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="gradient-button">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

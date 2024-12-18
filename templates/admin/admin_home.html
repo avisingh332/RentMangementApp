@@ -1,0 +1,99 @@
+{% extends 'home.html' %}
+{% block content %}
+  <div class="d-flex flex-wrap mt-3 justify-content-between">
+
+    <!-- managed properties  -->
+    <div class="card text-center me-3 h-100  shadow1">
+      <div class="card-body row">
+            <div class="col-md-3 d-flex align-items-center">
+              <i class="fa-solid fs-2 fa-city"></i>
+            </div>
+            <div class="col-md-9 text-end">            
+              <p class="card-text fs-2">5</p>
+              <h5>Manged <br> Properties</h5>
+            </div>
+          
+      </div>
+    </div>
+    <!-- Apartment Units  -->
+    <div class="card  me-3 h-100 shadow1">
+      <div class="card-body row">
+          <div class="col-md-3  d-flex align-items-center">
+            <i class="fa-solid fs-1 fa-building-user"></i>
+          </div>
+          <div class="col-md-9  text-end">
+            <p class="card-text fs-2"> 10</p>
+            <h5 class="">Apartment <br> Units</h5>
+          </div>
+        
+      </div>
+    </div>
+    <!--Tenants -->
+    <div class="card text-center me-3 h-100 shadow1">
+      <div class="card-body row">
+        <div class="col-md-3 d-flex align-items-center">
+          <i class="fa-solid fs-1 fa-people-group"></i>
+        </div>
+        <div class="col-md-9 text-end">
+          <p class="card-text fs-2"> 10</p>
+          <h5 class="">Tenants</h5>
+        </div>
+      </div>
+    </div>
+
+        <!--Active Maintenance Request -->
+        <div class="card text-center me-3 h-100 shadow1">
+          <div class="card-body row">
+            <div class="col-md-4  d-flex align-items-center">
+              <i class="fa-solid fs-1 fa-toolbox"></i>
+            </div>
+            <div class="col-md-8 text-center ">
+              <p class="card-text fs-2"> 10</p>
+              <h5 class="">Active<br> Request</h5>
+            </div>
+          </div>
+        </div>
+  </div>
+
+  <div class="shadow1 p-3 mt-3  border border-2 rounded-2 bg-white">
+    <h4 class="">Monthly Rental Table</h4>
+    <table id="example" class="display">
+      <thead>
+          <tr>
+              <th>Tenant Name</th>
+              <th>Due Date</th>
+              <th>Monthly Rental</th>
+              <th>Amount Paid</th>
+              <th>Amount Due</th>
+              <th>Payment Date</th>
+              <th>Payment Status</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for row in data %}
+          <tr>
+              <td>{{ row.Tenant_Name }}</td>
+              <td>{{ row.due_date.strftime('%d %b %Y') }}</td>
+              <td>${{ '{:,.2f}'.format(row.monthly_rental) }}</td>
+              <td>${{ '{:,.2f}'.format(row.amount_paid) }}</td>
+              <td>${{ '{:,.2f}'.format(row.amount_due) }}</td>
+              <td>
+                  {% if row.payment_date %}
+                      {{ row.payment_date.strftime('%d %b %Y') }}
+                  {% else %}
+                      Not Paid
+                  {% endif %}
+              </td>
+              <td>{{ row.payment_status }}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      $('#example').DataTable()
+    })
+  </script>
+{% endblock %}
