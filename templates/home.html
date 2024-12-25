@@ -10,17 +10,17 @@
       <div class="col-2 g-0" style="background-color: #33444C;">
         <div class="nav mt-2 flex-column nav-pills" id="nav-tab" role="tablist" aria-orientation="vertical">
           {% if role_check('Resident') %}
-            <div style="{% if request.endpoint == 'user_home' %}
+            <div style="{% if request.endpoint == 'user_bp.user_home' %}
                 background-color:#2B3540;
               {% endif %}">
-              <a class="nav-link text-white" id="nav-login-tab" type="button" role="tab" aria-controls="nav-login" aria-selected="true" href="{{ url_for('user_home') }}">
+              <a class="nav-link text-white" id="nav-login-tab" type="button" role="tab" aria-controls="nav-login" aria-selected="true" href="{{ url_for('user_bp.user_home') }}">
                 <i class="fa-solid fa-gauge"></i>
                 <span class="ms-2">Dashboard-User</span>
               </a>
             </div>
           {% else %}
             <div style="{% if request.endpoint == 'admin_home' %}background-color:#2B3540;{% endif %}">
-              <a class="nav-link text-white" id="nav-register-tab" type="button" role="tab" aria-controls="nav-register" aria-selected="false" href="{{ url_for('admin_home') }}">
+              <a class="nav-link text-white" id="nav-register-tab" type="button" role="tab" aria-controls="nav-register" aria-selected="false" href="{{ url_for('admin_bp.admin_home') }}">
                 <i class="fa-solid fa-gauge"></i>
                 <span class="ms-2">Dashboard-Admin</span>
               </a>
