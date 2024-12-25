@@ -1,7 +1,7 @@
 # extensions/security.py
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from models.user_model import User, Role
-from database import db
+from models import db
 
 # Initialize the user data store and security
 user_datastore = None

@@ -1,4 +1,4 @@
-from database.db import db
+from models import db
 from flask_login import UserMixin
 from flask_security import RoleMixin
 from sqlalchemy import String
@@ -12,18 +12,21 @@ class Role(RoleMixin,db.Model ):
 # Create a table in the database for assigning roles
 roles_users = db.Table(
     'roles_users',
-    db.Column('user_id', db.Integer,  db.ForeignKey('user.id', ondelete='CASCADE')),
-    db.Column('role_id', db.Integer,  db.ForeignKey('role.id', ondelete='CASCADE'))
+    db.Column('user_id', db.Integer,  db.ForeignKey('user.id', ondelete='CASCADE'), nullable= False),
+    db.Column('role_id', db.Integer,  db.ForeignKey('role.id', ondelete='CASCADE'),  nullable= False)
 )
-
-
 # Create a table in the database for storing users
 class User(UserMixin, db.Model ):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     email: Mapped[str] = mapped_column(unique=True)
+    name:Mapped[str] = mapped_column(String(15),nullable=False)
     password: Mapped[str] = mapped_column(nullable=False, server_default='')
     active: Mapped[bool] = mapped_column()
     roles: Mapped[list[Role]] = relationship(Role, secondary='roles_users', backref=db.backref('users', lazy='dynamic'))
     fs_uniquifier: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    # navigation property
+    apartment = relationship('Apartment', uselist=False, back_populates="resident")
+    maintenances = relationship('Maintenance',uselist=True, back_populates='resident')
+    agreements = relationship('Agreement', uselist= True, back_populates='resident')
 
 

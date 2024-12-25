@@ -9,7 +9,7 @@
               <i class="fa-solid fs-2 fa-city"></i>
             </div>
             <div class="col-md-9 text-end">            
-              <p class="card-text fs-2">5</p>
+              <p class="card-text fs-2"> {{managed_properties_count}} </p>
               <h5>Manged <br> Properties</h5>
             </div>
           
@@ -22,7 +22,7 @@
             <i class="fa-solid fs-1 fa-building-user"></i>
           </div>
           <div class="col-md-9  text-end">
-            <p class="card-text fs-2"> 10</p>
+            <p class="card-text fs-2"> {{ apartment_units_count}}</p>
             <h5 class="">Apartment <br> Units</h5>
           </div>
         
@@ -35,7 +35,7 @@
           <i class="fa-solid fs-1 fa-people-group"></i>
         </div>
         <div class="col-md-9 text-end">
-          <p class="card-text fs-2"> 10</p>
+          <p class="card-text fs-2"> {{tenants_count}} </p>
           <h5 class="">Tenants</h5>
         </div>
       </div>
@@ -48,7 +48,7 @@
               <i class="fa-solid fs-1 fa-toolbox"></i>
             </div>
             <div class="col-md-8 text-center ">
-              <p class="card-text fs-2"> 10</p>
+              <p class="card-text fs-2"> {{active_maintenance_count}}  </p>
               <h5 class="">Active<br> Request</h5>
             </div>
           </div>
@@ -62,29 +62,29 @@
           <tr>
               <th>Tenant Name</th>
               <th>Due Date</th>
-              <th>Monthly Rental</th>
-              <th>Amount Paid</th>
+              <th>Total Amount</th>
               <th>Amount Due</th>
-              <th>Payment Date</th>
+              <th>Month</th>
               <th>Payment Status</th>
           </tr>
       </thead>
       <tbody>
           {% for row in data %}
           <tr>
-              <td>{{ row.Tenant_Name }}</td>
+              <td>{{ row.tenant_name }}</td>
               <td>{{ row.due_date.strftime('%d %b %Y') }}</td>
-              <td>${{ '{:,.2f}'.format(row.monthly_rental) }}</td>
-              <td>${{ '{:,.2f}'.format(row.amount_paid) }}</td>
-              <td>${{ '{:,.2f}'.format(row.amount_due) }}</td>
-              <td>
-                  {% if row.payment_date %}
-                      {{ row.payment_date.strftime('%d %b %Y') }}
+              <td>₹{{ '{:,.2f}'.format(row.bill_amount) }}</td>
+              <td>₹{{ '{:,.2f}'.format(row.due_amount) }}</td>
+              <td>{{ row.month.strftime('%b %Y')}}</td>
+              <td> 
+                {% if row.status in ['Overdue', 'Not Paid' ]%}
+                  <span class="bg-danger px-2 py-1 rounded rounded-pill">{{ row.status }} </span>
+                  {% elif row.status=='Paid' %}
+                  <span class="bg-success px-2 py-1 rounded rounded-pill">{{ row.status }} </span>
                   {% else %}
-                      Not Paid
-                  {% endif %}
+                  <span class="bg-warning px-2 py-1 rounded rounded-pill">{{ row.status }} </span>
+                {% endif %}
               </td>
-              <td>{{ row.payment_status }}</td>
           </tr>
           {% endfor %}
       </tbody>

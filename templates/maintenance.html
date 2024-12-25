@@ -1,41 +1,43 @@
 {% extends "home.html" %}
 {% block content %}
-   <style>
-    .gradient-button {
-        background: linear-gradient(to right, #629bb5, #2B3540);
-        border: none;
-        color: #fff;
-        padding: 10px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-      }
-      .btn-toggle[aria-expanded="true"]::after {
-        content: '\f078'; /* Font Awesome "chevron-down" Unicode */
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900; /* Required for solid icons */
-    }
-    
-    .btn-toggle[aria-expanded="false"]::after {
-        content: '\f054'; /* Font Awesome "chevron-right" Unicode */
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-    }
-   </style>
+    <style>
+        .gradient-button {
+            background: linear-gradient(to right, #629bb5, #2B3540);
+            border: none;
+            color: #fff;
+            padding: 10px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn-toggle[aria-expanded="true"]::after {
+            content: '\f078'; /* Font Awesome "chevron-down" Unicode */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900; /* Required for solid icons */
+        }
+        
+        .btn-toggle[aria-expanded="false"]::after {
+            content: '\f054'; /* Font Awesome "chevron-right" Unicode */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+        }
+    </style>
 
-    <div class="container " >
-        <div class="d-flex {% if role_check('Admin') %}text-end{%else%}justify-content-between{% endif %} my-3">
-            <h3 class=" my-auto">Maintenance Requests</h3>
-            {% if  role_check('Resident') %}
-                <a class="gradient-button" id="request-tab" href="{{url_for('create_maintenance')}}" >Add Request</a>
-            {%endif%}
+    <div class="container">
+        <div class="d-flex {% if role_check('Admin') %}text-end{% else %}justify-content-between{% endif %} my-3">
+            <h3 class="my-auto">Maintenance Requests</h3>
+            {% if role_check('Resident') %}
+                <a class="gradient-button" id="request-tab" href="{{ url_for('create_maintenance') }}">Add Request</a>
+            {% endif %}
+
         </div>
         <div class="p-4 border border-2 rounded-2 bg-white shadow1">
-                <table class="table table-striped">
-                    <thead>
+            <table id="example" class="display">
+                <thead>
+                    <tr>
                         <th>Id</th>
                         <th>Raised By</th>
                         <th>Description</th>
@@ -45,62 +47,80 @@
                         {% if role_check('Admin') %}
                             <th>Actions</th>
                         {% endif %}
-                    </thead>
-                    <tbody>
-                        {% for record in records %}
-                            <tr>
-                                <td>{{record.id}}</td>
-                                <td>{{record.raised_by}}</td>
-                                <td> {{record.description}} </td>
-                                <td> {{record.category}} </td>
-                                <td> {{record.priority}}  </td>
-                                <td>{{ record.status }}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                        <tr>
+                            <td>{{ record.id }}</td>
+                            <td>{{ record.resident.name }}</td>
+                            <td>{{ record.description }}</td>
+                            <td>{{ record.category.value }}</td>
+                            <td>{{ record.priority.value }}</td>
+                            <td>{{ record.status.value }}</td>
+                            {% if role_check('Admin') %}
                                 <td>
-                                    {% if role_check('Admin') %}
-                                        <button class="btn-toggle" style="text-decoration: none; border:none" data-bs-toggle="collapse" data-bs-target="#collapse{{ record.id }}"  aria-expanded="false"  >  </button>
-                                    {% endif %}
+                                    <button class="btn-toggle" style="text-decoration: none; border:none" data-bs-toggle="collapse" data-bs-target="#collapse{{ record.id }}" aria-expanded="false"></button>
+                                </td>
+                            {% endif %}
+                        </tr>
+
+                        {% if role_check('Admin') %}
+                            <tr class="collapse" id="collapse{{ record.id }}">
+                                <td colspan="7">
+                                    <div class="card card-body">
+                                        <form action="{{ url_for('update_status', id= record.id)}}" method="POST">
+                                            <input name="id" type="text" hidden value="{{ record.id }}">
+                                            <div class="row justify-content-center align-items-center">
+                                                <div class="col-md-3">
+                                                    <div class="mb-3">
+                                                        <label for="inputGroupSelect01" class="form-label">Update Status</label>
+                                                        <select  {% if record.status == StatusEnum.COMPLETE %}disabled{% endif %} name='status' class="form-select" required id="inputGroupSelect01">
+                                                            <option value='-1'>Choose...</option>
+                                                            {% for status in StatusEnum %}
+                                                                <option value="{{ status.value }}" {% if status.name == record.status.name %}selected{% endif %}>
+                                                                    {{ status.value }}
+                                                                </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <div class="mb-3">
+                                                        <label for="comment" name = "comment" class="form-label">
+                                                            {% if record.status == StatusEnum.COMPLETE %}
+                                                                Comment
+                                                            {% else %}
+                                                                Add a Comment
+                                                            {% endif %}
+                                                        </label>
+                                                        <textarea {% if record.status == StatusEnum.COMPLETE %}disabled{% endif %} name="comment" id="address" class="form-control" rows="1"> {% if record.comment %}{{record.comment}}{% endif %} </textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button class="btn btn-primary my-auto" {% if record.status == StatusEnum.COMPLETE %}disabled{% endif %} type="submit">Submit</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
-                            {% if role_check('Admin') %}
-                                <tr class="collapse" id="collapse{{ record.id }}" >
-                                    <td colspan="12"   >
-                                        <div class="card card-body">
-                                            <div class="row justify-content-center align-items-center">
-                                                    <div class="col-md-3">
-                                                        <div class="mb-3">
-                                                            <label for="inputGroupSelect01" class="form-label">Update Status</label>
-                                                            <select class="form-select" required  id="inputGroupSelect01">
-                                                                <option value='-1' >Choose...</option>
-                                                                {% for status in status_list %}
-                                                                    <option value="{{status.status_id}}" {% if status.status_id== record.status_id %}selected{% endif %} > {{ status.status_text }}   </option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-7">
-                                                        <div class="mb-3 ">
-                                                            <label for="comment" class="form-label">Add a Comment</label>
-                                                            <textarea name="comment" id="address" class="form-control" rows="1">
-                                                            </textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button class="btn btn-primary my-auto" type="submit">Submit</button>
-                                                    </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        
-            
-          
-            
+                        {% endif %}
+                        
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     
+    <!-- Include jQuery and DataTables JS/CSS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable();  // Initialize the DataTable
+        });
+    </script>
 {% endblock content %}

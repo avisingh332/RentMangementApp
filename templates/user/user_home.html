@@ -1,72 +1,111 @@
 {% extends 'home.html' %}
 {% block content %}
+<div class="row container">
   <h2>User DashBoard</h2>
-  <div class="row">
-    <div class="col-md-9 ">
+</div>
+<div class="row">
+  <div class="col-md-9">
       <div class="container">
         <div class="row">
-          <div class=" col-md-4">
-            <div class="card w-100 text-center shadow1 ">
+          <div class="col-md-4">
+            <div class="card w-100 text-center shadow1">
               <div class="card-body">
                 <i class="bi bi-person-fill fs-1 text-primary"></i>
                 <h5 class="card-title">Lease Ending On</h5>
                 <div class="card-body">
-                  <p class="card-text">5 Jan 2025</p>
+                  <p class="card-text">{{ user_agreement.lease_end_date.strftime('%d %b %Y') }}</p>
                 </div>
               </div>
             </div>
           </div>
-          <div class=" col-md-4">
-            <div class="card w-100 text-center  shadow1 ">
+          <div class="col-md-4">
+            <div class="card w-100 text-center shadow1">
               <div class="card-body">
                 <i class="bi bi-person-fill fs-1 text-primary"></i>
                 <h5 class="card-title">Rental Rates</h5>
                 <div class="card-body">
-                  <p class="card-text">₹14,000/month</p>
+                  <p class="card-text">₹{{ '{:,.2f}'.format(user_agreement.monthly_rent) }}/month</p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-4 ">
-            <div class="card w-100 text-center shadow1 ">
+          <div class="col-md-4">
+            <div class="card w-100 text-center shadow1">
               <div class="card-body">
                 <i class="bi bi-person-fill fs-1 text-primary"></i>
-                <h5 class="card-title">Get Lease Aggreement</h5>
+                <h5 class="card-title">Get Lease Agreement</h5>
                 <div class="card-body">
-                  <button class="btn btn-primary">Document</button>
+                  <!-- Button trigger modal -->
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#leaseModal">
+                    Document
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="leaseModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="leaseModalLabel">Lease Agreement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <!-- Embed PDF --> 
+                
+                {% if user_agreement.signed_lease_document  %}
+                  <iframe src="{{ url_for('static', filename='uploads/'+ user_agreement.signed_lease_document) }}" width="100%" height="500px"></iframe>
+                {% else %}
+                  <h3 class="text-center">Lease document not available</h3>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="row mt-3">
-          <div class=" col-md-12">
-            <div class="card w-100 p-4 shadow1 ">
+          <div class="col-md-12">
+            <div class="card w-100 p-4 shadow1">
               <div class="d-flex justify-content-between">
-                <h3 class="card-heading">Recent Payments</h3>
+                <h3 class="card-heading">Recent Bills</h3>
                 <button class="btn btn-success">Generate Bill</button>
               </div>
               <div class="card-body">
                 <table class="table table-striped">
                   <thead>
-                    <th>Payment Date</th>
-                    <th>Paid For</th>
+                    <th>Billing Month</th>
+                    <th> Total Bill </th>
                     <th>Amount Paid</th>
+                    <th>Due Amount</th>
                     <th>Payment Status</th>
+                    <th>Actions</th>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>2nd Jan 2025</td>
-                      <td>Jan-2025</td>
-                      <td>14000</td>
-                      <td>Fully Paid</td>
-                    </tr>
-                    <tr>
-                      <td>2nd Dec 2024</td>
-                      <td>Dec-2025</td>
-                      <td>14000</td>
-                      <td>Fully Paid</td>
-                    </tr>
+                    {% for bill in bills %}
+                      <tr>
+                        <td>{{ bill.month.strftime('%b %Y') }}</td>
+                        <td>₹{{ '{:,.2f}'.format(bill.bill_amount) }}</td>
+                        <td>₹{{ '{:,.2f}'.format(bill.amount_paid) }}</td>
+                        <td>₹{{ '{:,.2f}'.format(bill.amount_due) }}</td>
+                        <td> 
+                          <span class=" {% if bill.payment_status =="Not Paid" %} bg-danger 
+                          {% elif bill.payment_status=="Full Payment" %} bg-success 
+                          {% else %} bg-warning {% endif %}
+                          px-2 py-1 rounded rounded-pill">{{ bill.payment_status }} </span>
+                        </td>
+                        <td>
+                          {% if bill.payment_status in ["Not Paid", "Partial Payment"] %}
+                            <a href="{{ url_for('payment', bill_id=bill.bill_id) }}" class="btn btn-primary py-1 px-2">
+                              Pay Bill
+                            </a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+
                   </tbody>
                 </table>
               </div>
@@ -76,9 +115,20 @@
       </div>
     </div>
     <div class="col-md-3 px-0">
-      <div class="rounded-3 mx-0 p-4 bg-white shadow1">
-        <h5>Property Details</h5>
-        <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Scelerisque ligula amet hac; molestie erat etiam duis nibh. Eleifend inceptos scelerisque semper et orci nisl. Euismod auctor et; neque habitasse ipsum cras accumsan fringilla. Metus eu praesent adipiscing congue et lectus. Metus velit tincidunt ipsum nisl habitasse est non venenatis. Diam tempor fermentum rutrum hac dignissim venenatis varius. Amet quam ullamcorper nibh habitant luctus ad semper.</p>
+      <div class="container">
+        <div class="rounded-3 p-4 bg-white shadow1">
+          <h5>Property Details</h5>
+          <div style="overflow: hidden;">
+            <!-- <img src="https://placehold.co/300x200/png"  style="object-fit: cover;"  alt=""> -->
+            <img src="https://placehold.co/300x200?text=Property+Image&font=roboto"  style="object-fit: contain;"  alt="">
+          </div>
+          <p>
+            <strong>Apartment Number: </strong> {{apartment.apartment_number	}} <br>
+            <strong>Property Name: </strong> {{property.name}} <br>
+            <strong>Address: </strong> {{property.address}} <br>
+            <strong>Apartment Type: </strong> {{apartment.apartment_type}} <br>
+          </p>
+        </div>
       </div>
     </div>
   </div>

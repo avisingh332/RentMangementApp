@@ -43,7 +43,16 @@
           {% endif %}
         </div>
       </div>
-      <div class="col" style="background-color: #F2F9FF; height:100vh">
+      <div class="col" style="background-color: #F2F9FF; height:100vh; overflow-y: auto;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+              <div class="alert-container">
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+              </div>
+            {% endif %}
+        {% endwith %}
         {% block content %}
         {% endblock %}
       </div>

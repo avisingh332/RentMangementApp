@@ -1,4 +1,5 @@
 from datetime import date
+from enum import Enum
 report_data = [
     {
         'due_date': date(2025, 1, 13),
