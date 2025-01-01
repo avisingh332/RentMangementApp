@@ -1,15 +1,15 @@
 from flask import Blueprint, render_template, url_for, redirect, request, flash
 from flask_login import current_user, login_required
 from flask_security import roles_accepted
-from models import db
-from models.agreement import Agreement
-from models.property import Property
-from models.apartment import Apartment
-from models.maintenance import Maintenance
-from models.user_model import User
-from models.bill import Bill
-from models.enums import PaymentMethod, StatusEnum, CategoryEnum,PriorityEnum
-from models.payment import Payment
+from app.models import db
+from app.models.agreement import Agreement
+from app.models.property import Property
+from app.models.apartment import Apartment
+from app.models.maintenance import Maintenance
+from app.models.user_model import User
+from app.models.bill import Bill
+from app.models.enums import PaymentMethod, StatusEnum, CategoryEnum,PriorityEnum
+from app.models.payment import Payment
 from datetime import datetime
 
 user_bp = Blueprint('user_bp', __name__, template_folder='templates')
@@ -64,9 +64,7 @@ def payment():
     if request.method =='GET':
         bill_id = request.args.get('bill_id')
         bill = db.session.query(Bill).filter(Bill.id == bill_id).first()
-        amount = bill.bill_amount
-        if bill.amount_paid is not None:
-            amount  = amount - bill.amount_paid
+        amount = bill.bill_amount - bill.amount_paid
         print(f"Got Bill id as : {bill_id}")
         return render_template('payment.html',
                             bill_id=bill_id,
@@ -77,17 +75,18 @@ def payment():
         bill_id = request.form['bill_id']
         amount = float(request.form['amount'])
         payment_method = request.form['payment_method']
-        print(f'{bill_id}-> {amount}-> {payment_method}')
+        surcharge = float(request.form['surcharge'])
+
         # Process the payment logic (e.g., update the database)
         bill = db.session.query(Bill).filter(Bill.id == bill_id).first()
         if bill:
             new_payment = Payment(bill_id =bill_id,
                                 amount_paid =amount,
+                                surcharge = surcharge,
                                 paid_at = datetime.now(),
                                 payment_method = PaymentMethod(payment_method) )
             db.session.add(new_payment)
-            bill.amount_paid =0
-            bill.amount_paid += amount
+            bill.amount_paid += (amount)
             db.session.commit()
             flash('Payment successful!', 'success')
         else:
@@ -103,15 +102,12 @@ def create_maintenance():
         category = request.form.get('category')
         priority = request.form.get('priority')
         description = request.form.get('description')
-        # print(f"{category}, {priority}, {description}");
-        # return redirect(url_for('maintenance'))
-        # Simulate logged-in user (use actual user in real implementation)
         logged_in_user_id = current_user.get_id()  # Replace with actual logged-in user ID from session
 
         # Validate data (if needed)
-        if not category or not priority or not description:
+        if category == None or  priority == None or description == None:
             flash("All fields are required!", "danger")
-            return redirect(url_for('create_maintenance'))
+            return redirect(url_for('user_bp.create_maintenance'))
 
         # Create new maintenance request
         new_maintenance = Maintenance(
@@ -121,18 +117,14 @@ def create_maintenance():
             description=description,
             status=StatusEnum.PENDING  # Default status for a new request
         )
-        # for attr, value in new_maintenance.__dict__.items():
-        #     if not attr.startswith('_'):  # Skip internal attributes
-        #         print(f"Property: {attr}, Value: {value}")
-        
         db.session.add(new_maintenance)
         db.session.commit()
 
         flash("Maintenance request created successfully!", "success")
-        return redirect(url_for('maintenance'))  # Redirect to the main maintenance page
+        return redirect(url_for('main_bp.maintenance'))  # Redirect to the main maintenance page
     else:
         # Render the form template for GET request
         return render_template(
             'create_maintenance.html',
-            CategoryEnum = CategoryEnum,
+            CategoryEnum = CategoryEnum, 
             PriorityEnum = PriorityEnum)

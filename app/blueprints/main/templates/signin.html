@@ -35,7 +35,7 @@
                     <form action="/signin" method="POST" id="signin-form" >
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" name = "email" class="form-control" id="email" placeholder="Enter your email">
+                            <input type="text" name = "username" class="form-control" id="email" placeholder="Enter your username">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
@@ -46,7 +46,7 @@
                             <button type="submit" value="Submit" class="gradient-button ">Login</button>
                         </div>
                         <div class="text-center mt-2">
-                            <a href="#">Forgot password?</a>
+                            <a href="{{url_for('main_bp.register')}}">Register?</a>
                         </div>
                     </form>
 

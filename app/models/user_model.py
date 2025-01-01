@@ -1,7 +1,7 @@
-from models import db
+from app.models import db
 from flask_login import UserMixin
 from flask_security import RoleMixin
-from sqlalchemy import String
+from sqlalchemy import String, Boolean
 from sqlalchemy.orm import validates, mapped_column, Mapped, relationship
 
 # Create a table in the database for storing roles
@@ -20,9 +20,11 @@ class User(UserMixin, db.Model ):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     email: Mapped[str] = mapped_column(unique=True)
     name:Mapped[str] = mapped_column(String(15),nullable=False)
-    password: Mapped[str] = mapped_column(nullable=False, server_default='')
-    active: Mapped[bool] = mapped_column()
+    username:Mapped[str] = mapped_column(nullable=True)
+    password: Mapped[str] = mapped_column(nullable=True)
+    active: Mapped[bool] = mapped_column(default=False)
     roles: Mapped[list[Role]] = relationship(Role, secondary='roles_users', backref=db.backref('users', lazy='dynamic'))
+    is_registered: Mapped[bool] = mapped_column( Boolean, nullable=False, default= False)
     fs_uniquifier: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     # navigation property
     apartment = relationship('Apartment', uselist=False, back_populates="resident")

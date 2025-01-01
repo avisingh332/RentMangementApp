@@ -1,0 +1,59 @@
+{% extends 'home.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h3>Make Payment</h3>
+  <form method="POST" action="{{ url_for('user_bp.payment') }}">
+    <div class="mb-3">
+      <label for="amount" class="form-label">Amount</label>
+      <p class="form-control-plaintext">{{ amount }}</p>
+      <input type="number" name="amount" hidden value ={{amount}} >
+    </div>
+    <div class="mb-3">
+      <label for="payment_method" class="form-label">Payment Method</label>
+      <select id="payment_method" name="payment_method" class="form-select" required>
+        <option value="" disabled selected>Choose Payment Method</option>
+        {% for pm in PaymentMethod %}
+          <option value="{{ pm.value }}">{{ pm.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <input type="number" id="hidden_surcharge" name = "surcharge" value="0.00" hidden >
+    <div class="mb-3" id="surcharge-section" style="display: none;">
+      <label for="surcharge" class="form-label">Surcharge (2.8%)</label>
+      <p class="form-control-plaintext" id="surcharge_display">0.00</p>
+    </div>
+    <div class="mb-3">
+      <label for="total_amount" class="form-label">Total Amount</label>
+      <p class="form-control-plaintext" id="total_amount">{{ amount }}</p>
+    </div>
+    <input type="hidden" name="bill_id" value="{{ bill_id }}">
+    <button type="submit" class="btn btn-success">Pay Now</button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const paymentMethod = document.getElementById('payment_method');
+    const surchargeSection = document.getElementById('surcharge-section');
+    const surchargeDisplay = document.getElementById('surcharge_display');
+    const hiddenSurchargeInput = document.getElementById('hidden_surcharge');
+    const totalAmountDisplay = document.getElementById('total_amount');
+    const amount = parseFloat({{ amount }});
+
+    paymentMethod.addEventListener('change', function () {
+      if (this.value === 'Card') {
+        const surcharge = (amount * 2.8) / 100;
+        hiddenSurchargeInput.value = surcharge.toFixed(2);
+        surchargeDisplay.textContent = surcharge.toFixed(2);
+        totalAmountDisplay.textContent = (amount + surcharge).toFixed(2);
+        surchargeSection.style.display = 'block';
+      } else {
+        hiddenSurchargeInput.value = '0.00';
+        surchargeDisplay.textContent = '0.00';
+        totalAmountDisplay.textContent = amount.toFixed(2);
+        surchargeSection.style.display = 'none';
+      }
+    });
+  });
+</script>
+{% endblock %}

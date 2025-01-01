@@ -1,8 +1,8 @@
-from models import db
+from app.models import db
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey, String, Integer, Enum as SqlEnum
 from sqlalchemy.orm  import Mapped, mapped_column, relationship
-from models.enums import CategoryEnum, PriorityEnum, StatusEnum
+from app.models.enums import CategoryEnum, PriorityEnum, StatusEnum
 
 def get_enum_values(enum_class):
     return [member.value for member in enum_class]

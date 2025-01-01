@@ -1,14 +1,14 @@
 from flask import Blueprint, render_template, url_for, redirect, request, flash
 from flask_login import current_user, login_required
 from flask_security import roles_accepted
-from models import db
-from models.agreement import Agreement
-from models.property import Property
-from models.apartment import Apartment
-from models.maintenance import Maintenance
-from models.user_model import User
-from models.enums import StatusEnum
-from models.bill import Bill
+from app.models import db
+from app.models.agreement import Agreement
+from app.models.property import Property
+from app.models.apartment import Apartment
+from app.models.maintenance import Maintenance
+from app.models.user_model import User
+from app.models.enums import StatusEnum
+from app.models.bill import Bill
 from datetime import date
 
 admin_bp = Blueprint('admin_bp', __name__, template_folder='templates')
@@ -87,4 +87,4 @@ def update_status(id):
     else:
         flash('Maintenance request not found', 'danger')
 
-    return redirect(url_for('maintenance'))
+    return redirect(url_for('main_bp.maintenance'))  

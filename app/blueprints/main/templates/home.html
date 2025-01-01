@@ -27,7 +27,7 @@
             </div>
           {% endif %}
           <div style="{% if request.endpoint in ['maintenance','create_maintenance'] %}background-color:#2B3540;{% endif %}">
-            <a class="nav-link text-white" id="nav-maintenance-tab" type="button" role="tab" aria-controls="nav-maintenance" aria-selected="true" href="{{ url_for('maintenance') }}">
+            <a class="nav-link text-white" id="nav-maintenance-tab" type="button" role="tab" aria-controls="nav-maintenance" aria-selected="true" href="{{ url_for('main_bp.maintenance') }}">
               <i class="fa-solid fa-hammer"></i>
               <span class="ms-2">Maintenance</span>
             </a>
@@ -44,15 +44,6 @@
         </div>
       </div>
       <div class="col" style="background-color: #F2F9FF; height:100vh; overflow-y: auto;">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-              <div class="alert-container">
-                {% for category, message in messages %}
-                  <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-              </div>
-            {% endif %}
-        {% endwith %}
         {% block content %}
         {% endblock %}
       </div>

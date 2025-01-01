@@ -1,13 +1,13 @@
-from models.user_model import User, Role
-from models.apartment import Apartment
-from models.property import Property
+from app.models.user_model import User, Role
+from app.models.apartment import Apartment
+from app.models.property import Property
 from werkzeug.security import generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
-from models.agreement import Agreement
-from models.maintenance import Maintenance
+from app.models.agreement import Agreement
+from app.models.maintenance import Maintenance
 import uuid
-from models.enums import CategoryEnum, PriorityEnum, StatusEnum
+from app.models.enums import CategoryEnum, PriorityEnum, StatusEnum
 
 
 # Seed roles
@@ -37,23 +37,32 @@ def seed_users_assign_roles(db:SQLAlchemy):
     
     # Define sample users with plaintext passwords
     sample_users = [
-        {"email": "admin@example.com", "name":"Admin-User", "password": "admin123", "active": True, "roles": ["Admin"]},
-        {"email": "user1@example.com", "name":"User 1",  "password": "user123", "active": True, "roles": ["Resident"]},
-        {"email": "user2@example.com", "name":"User 2", "password": "user123", "active": True, "roles": ["Resident"]},
-        {"email": "user3@example.com", "name":"User 3", "password": "user123", "active": True, "roles": ["Resident"]},
+        {"email": "admin@example.com", "name":"Admin-User",  "active": True, "roles": ["Admin"]},
+        {"email": "user1@example.com", "name":"User 1",   "active": True, "roles": ["Resident"]},
+        {"email": "user2@example.com", "name":"User 2",  "active": True, "roles": ["Resident"]},
+        {"email": "user3@example.com", "name":"User 3",  "active": True, "roles": ["Resident"]},
     ]
     
+    user_list = []
     # Create users and assign roles
     for user_data in sample_users:
-        hashed_password = generate_password_hash(user_data["password"])
-        user = User(email=user_data["email"], name= user_data["name"], password=hashed_password, active=user_data["active"], fs_uniquifier=str(uuid.uuid4()) )
+        # hashed_password = generate_password_hash(user_data["password"])
+        user = User(email=user_data["email"], name= user_data["name"], active= False, fs_uniquifier=str(uuid.uuid4()) )
         # Assign roles to users
         for role_name in user_data["roles"]:
             role = Role.query.filter_by(name=role_name).first()
             if role:
                 user.roles.append(role)
-        db.session.add(user)
+        # db.session.add(user)
+        user_list.append(user)
     # Commit the changes
+    # user_list[1].active = True
+    # user_list[0].active = True
+    # user_list[0].is_registered = True
+    # user_list[1].is_registered = True
+    # user_list[0].password = generate_password_hash('admin123')
+    # user_list[1].password = generate_password_hash('user123')
+    db.session.add_all(user_list)
     db.session.commit()
     print("Users and roles assigned successfully.")
 

@@ -30,7 +30,7 @@
         <div class="d-flex {% if role_check('Admin') %}text-end{% else %}justify-content-between{% endif %} my-3">
             <h3 class="my-auto">Maintenance Requests</h3>
             {% if role_check('Resident') %}
-                <a class="gradient-button" id="request-tab" href="{{ url_for('create_maintenance') }}">Add Request</a>
+                <a class="gradient-button" id="request-tab" href="{{ url_for('user_bp.create_maintenance') }}">Add Request</a>
             {% endif %}
 
         </div>

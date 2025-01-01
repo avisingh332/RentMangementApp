@@ -20,7 +20,7 @@
         <h3 class="my-auto">Add Maintenance Request</h3>
     </div>
     <div class="p-4 border border-2 mt-2 rounded-2 bg-white shadow1">
-        <form action="{{ url_for('create_maintenance') }}" method="POST">
+        <form action="{{ url_for('user_bp.create_maintenance') }}" method="POST">
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -36,7 +36,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="priority" class="form-label">Set Priority</label>
-                        <select class="form-select" required name="priority" id="priority">
+                        <select aria-required="true" class="form-select" required name="priority" id="priority">
                             <option selected disabled>Choose...</option>
                             {% for priority in PriorityEnum %}
                                 <option value={{priority.value}}>{{priority.name}}</option>
@@ -59,7 +59,4 @@
         </form>
     </div>
   </div>
-
- 
-
 {% endblock %}

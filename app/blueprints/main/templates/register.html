@@ -1,0 +1,69 @@
+<!-- signin.html -->
+{% extends "base.html" %}
+{% block body %}
+<!-- Show only if user is logged in -->
+{% if current_user.is_authenticated %}
+    You are already logged in.
+    
+<!-- Show if user is NOT logged in -->    
+{% else %}
+<!-- msg that was passed while rendering template -->
+{{ msg }}<br>
+<style>
+    .gradient-button {
+        background: linear-gradient(to right, #ff9999, #ff7866);
+        border: none;
+        color: #fff;
+        padding: 10px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center">Register</h3>
+                    <p class="card-text text-center">Enter Details</p>
+
+                    <form action="/register" method="POST" id="signin-form" >
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" name = "email" class="form-control" id="email" placeholder="Enter your Email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">User Name</label>
+                            <input type="text" name = "username" class="form-control" id="email" placeholder="Enter your User Name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" name = "password" class="form-control" id="password"
+                                placeholder="Enter your password">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" name = "confirm_password" class="form-control" id="password"
+                                placeholder="Confirm your password">
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" value="Submit" class="gradient-button ">Register</button>
+                        </div>
+                        <div class="text-center mt-2">
+                            <a href="{{url_for('main_bp.signin')}}">Already have an Account? Login</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock body %}
